@@ -7,7 +7,7 @@
 下载地址：
 | 文件名  | 适用版本  |
 |---|---|
-| [Clipboard-v1.0.dll](https://github.com/hufang360/TShockClipboard/releases/download/v1.0/Clipboard-v1.0.dll)  | TShock5.0 - Terraria1.4.4.x  |
+| [Clipboard-v1.1-1453-special.dll](https://github.com/hufang360/TShockClipboard/releases/download/v1.1/Clipboard-v1.1-1453-special.dll)  | Terraria1.4.5 |
 
 
 ## 指令

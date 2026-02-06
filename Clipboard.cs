@@ -23,12 +23,12 @@ public partial class Plugin : TerrariaPlugin
 
     public Plugin(Main game) : base(game)
     {
-        Utils.SaveDir = Path.Combine(TShock.SavePath, "Clipboard");
     }
 
     public override void Initialize()
     {
         Commands.ChatCommands.Add(new Command(PermAdmin, Manage, "clipboard", "clip") { HelpText = "复制粘贴图格", AllowServer = false });
+        Utils.SaveDir = Path.Combine(TShock.SavePath, "Clipboard");
     }
 
     /// <summary>
@@ -119,7 +119,7 @@ public partial class Plugin : TerrariaPlugin
 
             case "import":
             case "i":
-                Load(Path.Combine(Utils.SaveDir, "0.TEditSch"), op.TileX, op.TileY+3);
+                Load(Path.Combine(Utils.SaveDir, "0.TEditSch"), op.TileX, op.TileY + 3);
                 break;
         }
     }

@@ -57,7 +57,7 @@ public class TileScaner
                     if (index != -1)
                     {
                         TEItemFrame teFrame = (TEItemFrame)TileEntity.ByID[index];
-                        saver.itemFrames.Add(new ItemFrameData(relativeX, relativeY, teFrame.item.netID, teFrame.item.prefix));
+                        saver.itemFrames.Add(new ItemFrameData(relativeX, relativeY, teFrame.item.type, teFrame.item.prefix));
                     }
                 }
 
@@ -68,7 +68,7 @@ public class TileScaner
                     if (index != -1)
                     {
                         TEWeaponsRack teWeapon = (TEWeaponsRack)TileEntity.ByID[index];
-                        saver.weaponsRacks.Add(new ItemFrameData(relativeX, relativeY, teWeapon.item.netID, teWeapon.item.prefix));
+                        saver.weaponsRacks.Add(new ItemFrameData(relativeX, relativeY, teWeapon.item.type, teWeapon.item.prefix));
                     }
                 }
 
@@ -79,7 +79,7 @@ public class TileScaner
                     if (index != -1)
                     {
                         TEFoodPlatter tePlatter = (TEFoodPlatter)TileEntity.ByID[index];
-                        saver.foodPlatters.Add(new ItemFrameData(relativeX, relativeY, tePlatter.item.netID, tePlatter.item.prefix));
+                        saver.foodPlatters.Add(new ItemFrameData(relativeX, relativeY, tePlatter.item.type, tePlatter.item.prefix));
                     }
                 }
 
@@ -107,7 +107,11 @@ public class TileScaner
                     {
                         TEDisplayDoll teDoll = (TEDisplayDoll)TileEntity.ByID[index];
                         containerData = new() { x = relativeX, y = relativeY };
-                        foreach (var item in teDoll._items)
+                        foreach (var item in teDoll._equip)
+                        {
+                            containerData.Add(item);
+                        }
+                        foreach (var item in teDoll._misc)
                         {
                             containerData.Add(item);
                         }
@@ -328,22 +332,24 @@ public class TileScaner
             index = TEDisplayDoll.Place(cx, cy);
             if (TileEntity.ByID.TryGetValue(index, out var value) && value is TEDisplayDoll teDoll)
             {
-                var dye = 0; //0=false,1=true
-                var total = 16;
-                var half = total / 2;
-                for (int k = 0; k < ele.items.Count; k++)
+                var k = 0;
+                // _equip
+                for (int n = 0; n < teDoll._equip.Length && k < ele.items.Count; n++, k++)
                 {
-                    if (k < half)
-                    {
-                        teDoll._items[k] = ItemData.CreateItem(ele.items[k]);
-                        dye = 0;
-                    }
-                    else if (k < total)
-                    {
-                        teDoll._dyes[k - half] = ItemData.CreateItem(ele.items[k]);
-                        dye = 1;
-                    }
-                    NetMessage.TrySendData((int)PacketTypes.TileEntityDisplayDollItemSync, -1, -1, null, -1, index, k, dye);
+                    teDoll._equip[n] = ItemData.CreateItem(ele.items[k]);
+                    NetMessage.TrySendData((int)PacketTypes.TileEntityDisplayDollItemSync, -1, -1, null, -1, index, n, 0);
+                }
+                // _misc
+                for (int n = 0; n < teDoll._misc.Length && k < ele.items.Count; n++, k++)
+                {
+                    teDoll._misc[n] = ItemData.CreateItem(ele.items[k]);
+                    NetMessage.TrySendData((int)PacketTypes.TileEntityDisplayDollItemSync, -1, -1, null, -1, index, n + 8, 0);
+                }
+                // _dyes
+                for (int n = 0; n < teDoll._dyes.Length && k < ele.items.Count; n++, k++)
+                {
+                    teDoll._dyes[n] = ItemData.CreateItem(ele.items[k]);
+                    NetMessage.TrySendData((int)PacketTypes.TileEntityDisplayDollItemSync, -1, -1, null, -1, index, n, 1);
                 }
             }
             if (index == -1)

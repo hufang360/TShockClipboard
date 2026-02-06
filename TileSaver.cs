@@ -144,7 +144,7 @@ public class ItemData
     {
         if (item != null)
         {
-            i = item.netID;
+            i = item.type;
             s = item.stack;
             p = item.prefix;
         }
