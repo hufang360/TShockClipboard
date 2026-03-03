@@ -182,8 +182,11 @@ public partial class Plugin : TerrariaPlugin
                 default:
                     break;
             }
-
         }
+
+        // 移除事件监听
+        hasEvent = false;
+        GetDataHandlers.MassWireOperation -= OnMassWire;
     }
 
 
